@@ -1,7 +1,7 @@
 {
   "name": "im-mutable",
   "version": "0.1.0",
-  "description": "Ergonomic way to work with immutable data",
+  "description": "Ergonomic way to mutate data without touching the original source",
   "main": "lib/im-mutable.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,12 +16,16 @@
     "immutable",
     "redux",
     "data",
-    "utility",
+    "helper",
     "typescript",
     "proxy"
   ],
   "author": "hackape",
   "license": "MIT",
+  "files": [
+    "lib",
+    "LICENSE"
+  ],
   "bugs": {
     "url": "https://github.com/hackape/im-mutable/issues"
   },
