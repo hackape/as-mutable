@@ -5,7 +5,8 @@
   "main": "lib/im-mutable.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ts-build": "rm -rf lib && tsc --pretty"
+    "ts-build": "rm -rf lib && tsc --pretty",
+    "prepublish": "npm run ts-build"
   },
   "typings": "lib/im-mutable.d.ts",
   "repository": {
