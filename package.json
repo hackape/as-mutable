@@ -1,6 +1,6 @@
 {
   "name": "as-mutable",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ergonomic way to mutate data without touching the original source",
   "main": "lib/as-mutable.js",
   "scripts": {
