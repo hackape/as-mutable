@@ -1,0 +1,32 @@
+{
+  "name": "im-mutable",
+  "version": "0.1.0",
+  "description": "Ergonomic way to work with immutable data",
+  "main": "lib/im-mutable.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ts-build": "rm -rf lib && tsc --pretty"
+  },
+  "typings": "lib/im-mutable.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/hackape/im-mutable.git"
+  },
+  "keywords": [
+    "immutable",
+    "redux",
+    "data",
+    "utility",
+    "typescript",
+    "proxy"
+  ],
+  "author": "hackape",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hackape/im-mutable/issues"
+  },
+  "homepage": "https://github.com/hackape/im-mutable#readme",
+  "devDependencies": {
+    "typescript": "^3.0.3"
+  }
+}
