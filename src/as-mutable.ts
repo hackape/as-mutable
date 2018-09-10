@@ -31,7 +31,7 @@ class ProxyWorker {
   proto: any
   constructor(client) {
     this.client = client
-    this.proto = Reflect.getPrototypeOf(client)
+    this.proto = client.__proto__
   }
 
   query(key) {
@@ -48,13 +48,17 @@ class ProxyWorker {
 
   has(key) {
     const lastOp = this.query(key)
-    if (!lastOp) return Reflect.has(this.client, key)
+    if (!lastOp) {
+      const hasOwnProperty = Boolean(Reflect.getOwnPropertyDescriptor(this.client, key))
+      const hasProtoProperty = Reflect.has(this.proto, key)
+      return hasOwnProperty || hasProtoProperty
+    }
     const [opcode] = lastOp
     if (opcode === ops.DEL) {
-      // client has the key but is not ownProperty
-      return Reflect.has(this.client, key) && !Reflect.getOwnPropertyDescriptor(this.client, key)
+      return Reflect.has(this.proto, key)
+    } else {
+      return true
     }
-    return true
   }
 
   hasOwnProperty(key) {
@@ -73,25 +77,22 @@ class ProxyWorker {
   }
 
   ownKeys() {
-    const keys = [] as any[]
+    const keys = new Set()
     const originalKeys = Reflect.ownKeys(this.client)
     originalKeys.forEach(key => {
-      if (this.records.has(key)) {
-        const [opcode] = this.query(key)!
-        if (opcode !== ops.DEL) {
-          keys.push(key)
-        }
-      } else {
-        keys.push(key)
-      }
+      keys.add(key)
     })
 
     this.records.forEach((v, key) => {
       const lastOp = v[v.length - 1]
-      if (lastOp[0] !== ops.DEL) keys.push(key)
+      if (lastOp[0] === ops.DEL) {
+        keys.delete(key)
+      } else {
+        keys.add(key)
+      }
     })
 
-    return keys
+    return Array.from(keys)
   }
 
   defineProperty(key, desc) {
@@ -101,23 +102,23 @@ class ProxyWorker {
   get(key) {
     const lastOp = this.query(key)
     let value
-    if (!lastOp) {
-      const desc = Reflect.getOwnPropertyDescriptor(this.client, key)
-      if (desc) {
-        // has own prop
-        value = asMutable(this.client[key])
-        if (isMutable(value)) {
-          if (desc.hasOwnProperty('value')) {
-            this.addOp(key, [ops.GET, { ...desc, value }])
-          }
-        }
-      } else {
-        value = this.client[key]
-      }
-    } else {
+    if (lastOp) {
       // @ts-ignore
       const [opcode, desc] = lastOp
-      value = desc.value
+      return desc && desc.value
+    }
+
+    const desc = Reflect.getOwnPropertyDescriptor(this.client, key)
+    if (desc) {
+      // client hasOwnProperty key
+      value = asMutable(this.client[key])
+      if (isMutable(value)) {
+        if (desc.hasOwnProperty('value')) {
+          this.addOp(key, [ops.GET, { ...desc, value }])
+        }
+      }
+    } else {
+      value = this.proto && this.proto[key]
     }
 
     return value
@@ -146,10 +147,12 @@ export function getValue(target) {
 
   const proxyWorker = target[MUTABLE] as ProxyWorker
   const client = proxyWorker.client
+  const proto = proxyWorker.proto
 
   if (!proxyWorker.records.size) return client
 
   const result = Array.isArray(client) ? [...client] : { ...client }
+  result.__proto__ = proto
 
   let mutated = false
   proxyWorker.records.forEach((record, key) => {
@@ -177,8 +180,7 @@ export function getValue(target) {
     }
   })
 
-  if (mutated) return result
-  return client
+  return mutated ? result : client
 }
 
 export function asMutable(target) {
