@@ -1,13 +1,13 @@
-# im-mutable
+# as-mutable
 
-`im-mutable` offers an ergonomic way to mutate data without touching the original source. It's a handy helper at circumstance, say when you work with `redux`, where you need to mutate native js data struct (object/array) while keeping the original source immutable.
+`as-mutable` offers an ergonomic way to mutate data without touching the original source. It's a handy helper at circumstance, say when you work with `redux`, where you need to mutate native js data struct (object/array) while keeping the original source immutable.
 
 ## Usage
 
 ```js
-import { mutable, getValue } from 'im-mutable'
+import { asMutable, getValue } from 'as-mutable'
 
-const mutableCopy = mutable(source)
+const mutableCopy = asMutable(source)
 // do whatever you want to the `mutableCopy`,
 // mutate it! it's ok as long as you keep its reference.
 
@@ -26,6 +26,6 @@ const result = getValue(mutableCopy)
 
 ## Caveats
 
-1. In order to work, `im-mutable` requires present of ES `Proxy` in the runtime.
+1. In order to work, `as-mutable` requires present of ES `Proxy` in the runtime.
 2. It's designed for plain js object and array, object with custom prototype should be fine most of the time, supposing you don't do crazy things.
 3. No support for ES Map/Set/WeekMap. These data structs are meant to be mutable at source, don't see the point to keep them immutable.

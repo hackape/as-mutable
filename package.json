@@ -1,17 +1,17 @@
 {
-  "name": "im-mutable",
+  "name": "as-mutable",
   "version": "0.1.0",
   "description": "Ergonomic way to mutate data without touching the original source",
-  "main": "lib/im-mutable.js",
+  "main": "lib/as-mutable.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "ts-build": "rm -rf lib && tsc --pretty",
     "prepublish": "npm run ts-build"
   },
-  "typings": "lib/im-mutable.d.ts",
+  "typings": "lib/as-mutable.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/hackape/im-mutable.git"
+    "url": "git+ssh://git@github.com/hackape/as-mutable.git"
   },
   "keywords": [
     "immutable",
@@ -28,9 +28,9 @@
     "LICENSE"
   ],
   "bugs": {
-    "url": "https://github.com/hackape/im-mutable/issues"
+    "url": "https://github.com/hackape/as-mutable/issues"
   },
-  "homepage": "https://github.com/hackape/im-mutable#readme",
+  "homepage": "https://github.com/hackape/as-mutable#readme",
   "devDependencies": {
     "typescript": "^3.0.3"
   }
