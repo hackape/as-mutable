@@ -105,7 +105,7 @@ class ProxyWorker {
       const desc = Reflect.getOwnPropertyDescriptor(this.client, key)
       if (desc) {
         // has own prop
-        value = mutable(this.client[key])
+        value = asMutable(this.client[key])
         if (isMutable(value)) {
           if (desc.hasOwnProperty('value')) {
             this.addOp(key, [ops.GET, { ...desc, value }])
@@ -124,7 +124,7 @@ class ProxyWorker {
   }
 
   set(key, value) {
-    value = mutable(value)
+    value = asMutable(value)
     const desc = { writable: true, enumerable: true, configurable: true, value }
     this.addOp(key, [ops.SET, desc])
   }
@@ -181,7 +181,7 @@ export function getValue(target) {
   return client
 }
 
-export function mutable(target) {
+export function asMutable(target) {
   if (!isDuplicable(target)) return target
   if (isMutable(target)) return target
 
